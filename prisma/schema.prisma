@@ -1,0 +1,135 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  reffCode    String   @unique
+  username    String   @unique
+  email       String   @unique
+  phoneNumber String   @unique
+  password    String
+  balance     Int      @default(0)
+  bonus       Int?     @default(0)
+  profits     Int?     @default(0)
+  country     String?
+  referrers   String[] @default([])
+  referrer    String?
+  createdAt   DateTime @default(now())
+}
+
+model Refferal {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  refferedBy  String
+  username    String
+  email       String
+  phoneNumber String
+  status      String   @default("Active")
+  date        DateTime @default(now())
+}
+
+model Deposit {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  username  String
+  amount    Int
+  image     String
+  status    Boolean? @default(false)
+  title     String   @default("Buy Balance")
+  createdAt DateTime @default(now())
+}
+
+model Withdraw {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  username       String
+  amount         Int
+  country        String
+  bankName       String
+  rekeningName   String
+  rekeningNumber String
+  status         Boolean? @default(false)
+  title          String   @default("Withdraw")
+  createdAt      DateTime @default(now())
+}
+
+model PaymentsMethod {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  rekeningName String
+  bankName     String
+  noRekening   String
+  image        String
+}
+
+model Invesment {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  username  String
+  level     String
+  amount    Int
+  createdAt DateTime @default(now())
+}
+
+model Notifications {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  sender   String
+  username String
+  desc     String
+  date     DateTime @default(now())
+}
+
+model News {
+  id    String   @id @default(auto()) @map("_id") @db.ObjectId
+  title String
+  desc  String
+  date  DateTime @default(now())
+}
+
+model Kyc {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  username  String   @unique
+  fullname  String
+  cardImage String
+  faceImage String
+  address   String
+  verified  Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Bonus {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  username String
+  amount   Int
+  from     String
+  desc     String
+  date     DateTime @default(now())
+}
+
+model Profits {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  username String
+  amount   Int
+  desc     String
+  date     DateTime @default(now())
+}
+
+model Trade {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  username  String
+  amount    Int
+  rateStake String
+  rateEnd   String
+  time      String
+  category  String
+  market    String   @default("BTC/USD")
+  status    Boolean  @default(true)
+  date      DateTime @default(now())
+}
