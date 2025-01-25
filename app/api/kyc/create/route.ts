@@ -3,10 +3,17 @@ import prisma from "@/lib/prisma";
 
 export async function POST(req: Request) {
   try {
-    const { username, fullname, cardImage, faceImage, address } =
+    const { username, fullname, cardImage, faceImage, address, video } =
       await req.json();
 
-    if (!username || !fullname || !cardImage || !faceImage || !address) {
+    if (
+      !username ||
+      !fullname ||
+      !cardImage ||
+      !faceImage ||
+      !address ||
+      !video
+    ) {
       return NextResponse.json({
         success: false,
         message: "Data is required",
@@ -20,6 +27,7 @@ export async function POST(req: Request) {
         cardImage,
         faceImage,
         address,
+        video,
       },
     });
 

@@ -317,13 +317,13 @@ const Sidebar = ({
               <div className="relative mr-3">
                 <img
                   src={item.image[1]}
-                  alt="PENTAHEX"
+                  alt="FOREX COACH"
                   className="w-[30px] rounded-full border-4 border-[#232A34]"
                 />
                 <div className="absolute bottom-[-40%] left-[-40%]">
                   <img
                     src={item.image[0]}
-                    alt="PENTAHEX"
+                    alt="FOREX COACH"
                     className="w-[30px] rounded-full border-4 border-[#232A34]"
                   />
                 </div>

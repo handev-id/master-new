@@ -16,7 +16,7 @@ const Navbar = ({ session }: { session: any }) => {
               alt="Landwind Logo"
             />
             <span className="text-xl max-lg:ml-5 font-semibold whitespace-nowrap text-white">
-              PENTAHEX
+              FOREX COACH
             </span>
           </a>
           <div className="lg:flex hidden items-center lg:order-2">

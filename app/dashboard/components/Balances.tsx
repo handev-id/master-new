@@ -12,14 +12,13 @@ export const BuyBalance = () => {
   const { user } = useUserStore();
   const { imgUrl } = useUpload();
   const [amount, setAmount] = useState("");
-  const [isPendingTrans, setIsPendingTrans] = useState(false);
 
   const { isPending, mutate } = useMutation({
     mutationFn: async () => {
       const { data } = await axios.post("/api/transactions/deposit", {
         username: user?.username,
         image: imgUrl,
-        amount: parseInt(amount),
+        amount: Number(amount),
       });
       if (data?.success) {
         localStorage.setItem("newTransactionId-ms", data?.result?.id);
@@ -35,65 +34,81 @@ export const BuyBalance = () => {
     },
   });
 
-  useEffect(() => {
-    const newTransactionId = localStorage.getItem("newTransactionId-ms");
+  // useEffect(() => {
+  //   const newTransactionId = localStorage.getItem("newTransactionId-ms");
 
-    if (newTransactionId) {
-      const getNewTransaction = async () => {
-        const { data } = await axios.get(
-          "/api/transactions/check-status/" + newTransactionId
-        );
-        if (data?.result?.status === false) {
-          setIsPendingTrans(true);
-        }
-      };
-      getNewTransaction();
-    }
-  }, []);
+  //   if (newTransactionId) {
+  //     const getNewTransaction = async () => {
+  //       const { data } = await axios.get(
+  //         "/api/transactions/check-status/" + newTransactionId
+  //       );
+  //       if (data?.result?.status === false) {
+  //         setIsPendingTrans(true);
+  //       }
+  //     };
+  //     getNewTransaction();
+  //   }
+  // }, []);
 
   return (
-    <Layout title='Buy Balance'>
+    <Layout title="Buy Balance">
       {isPending && <Loading />}
       <form>
-        <div className='text-white flex flex-col gap-2 w-full'>
-          {isPendingTrans && (
-            <div className='p-2 text-sm bg-red-500 text-white rounded-lg'>
+        <div className="text-white flex flex-col gap-2 w-full">
+          {/* {isPendingTrans && (
+            <div className="p-2 text-sm bg-red-500 text-white rounded-lg">
               You still have a transaction pending status. Wait until the
               transaction is processed in order to be able to buy USD balance
               again. Check History
             </div>
-          )}
-          <p className='text-sm'>Amount</p>
-          <div className='p-2.5 w-full rounded-md flex border outline-none bg-[#1f1f1f] border-white/35'>
-            <h3 className='pr-2 border-r border-white/35'>USD</h3>
+          )} /*}
+          <p className="text-sm">Amount</p>
+
+          {/* <div className="grid grid-cols-2 gap-2">
+            {[10, 20, 30, 40, 50, 100, 200, 300, 400, 500, 1000].map((item) => (
+              <button
+                key={item}
+                onClick={() => {
+                  setAmount(item);
+                }}
+                type="button"
+              >
+                <h3
+                  className={
+                    amount === item
+                      ? "p-3 rounded-md border border-green-500 bg-[#00CC99]"
+                      : "p-3 rounded-md border border-white/35"
+                  }
+                >
+                  ${item}
+                </h3>
+              </button>
+            ))}
+          </div> */}
+          <div className="p-2.5 w-full rounded-md flex border outline-none bg-gray-700 border-white/35">
+            <h3 className="pr-2 border-r border-white/35">USD</h3>
             <input
-              disabled={isPendingTrans}
-              type='number'
+              type="number"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              placeholder='Enter amount min $10'
-              className='disabled:opacity-50 w-full px-2 rounded-md flex outline-none bg-[#1f1f1f]'
+              placeholder="Enter amount min $10"
+              className="disabled:opacity-50 w-full px-2 rounded-md flex outline-none bg-gray-700"
             />
           </div>
-          <div className='my-3'>
+          <div className="my-3">
             payment screenshot:
-            <UploadForm isPending={isPendingTrans} />
+            <UploadForm isPending={false} />
           </div>
           <button
             onClick={() => {
-              if (amount.includes("-") || amount === "") {
+              if (Number(amount) === 0) {
                 toast.error("Amount is not a valid number");
-                return null;
-              }
-
-              if (isPendingTrans) {
-                toast.error("Please wait for the transaction to complete");
                 return null;
               }
               mutate();
             }}
-            type='button'
-            className='p-3 rounded hover:bg-[#279d80] mt-5 bg-[#00CC99] text-white w-[20%] max-lg:w-full'
+            type="button"
+            className="p-3 rounded hover:bg-[#279d80] mt-5 bg-[#00CC99] text-white w-[20%] max-lg:w-full"
           >
             Add Balance
           </button>

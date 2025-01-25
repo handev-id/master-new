@@ -4,19 +4,26 @@ import prisma from "@/lib/prisma";
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { username, amount, country, bankName, accNumber, accName } =
-      body.withdrawdata;
+    const {
+      username,
+      amount,
+      country,
+      bankName,
+      rekeningName,
+      rekeningNumber,
+    } = body.withdrawdata;
 
     if (
       !username ||
       !amount ||
       !country ||
       !bankName ||
-      !accNumber ||
-      !accName
+      !rekeningName ||
+      !rekeningNumber
     ) {
       return NextResponse.json({
-        message: "Data is required",
+        message:
+          "Complete your profile data, and make sure you have sufficient balance",
         status: 400,
         success: false,
       });
@@ -26,10 +33,9 @@ export async function POST(request: Request) {
       data: {
         username,
         amount: parseInt(amount),
-        country,
         bankName,
-        rekeningName: accName,
-        rekeningNumber: accNumber,
+        rekeningName,
+        rekeningNumber,
       },
     });
 

@@ -12,8 +12,8 @@ import Progress from "../Progress";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Dashboard | PENTAHEX",
-  description: "Dashboard PENTAHEX",
+  title: "Dashboard | FOREX COACH",
+  description: "Dashboard FOREX COACH",
 };
 
 export default async function RootLayout({

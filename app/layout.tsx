@@ -7,9 +7,9 @@ import Progress from "./Progress";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "PENTAHEX",
+  title: "FOREX COACH",
   description:
-    "Welcome To PENTAHEX. Suruhanjaya MasterBinary is an investment or stock trading company that was founded in 2009 and is present in almost all countries in the world.",
+    "Welcome To FOREX COACH. Suruhanjaya MasterBinary is an investment or stock trading company that was founded in 2009 and is present in almost all countries in the world.",
 };
 
 export default function RootLayout({

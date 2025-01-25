@@ -54,7 +54,7 @@ export const Welcome = () => {
     <div className="flex overflow-hidden bg-[#1f1f1f] rounded-lg flex-col mb-3 mt-5 text-white w-full shadow-lg shadow-[#A1A1A1]/15">
       <h2 className="text-xl border-b border-[#A1A1A1]/60 p-3">Welcome</h2>
       <p className="text-[#A1A1A1] p-3">
-        Welcome to PENTAHEX Member Panel. <br /> Your Refferal Link:
+        Welcome to FOREX COACH Member Panel. <br /> Your Refferal Link:
       </p>
       <h2 className="text-sm lg:text-2xl text-[#A1A1A1] p-3">
         {origin}/register?reff={user?.reffCode}

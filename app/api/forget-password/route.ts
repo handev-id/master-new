@@ -225,7 +225,7 @@ export async function POST(request: Request) {
                 <!-- start copy -->
                 <tr>
                   <td align="left" bgcolor="#ffffff" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px; border-bottom: 3px solid #d4dadf">
-                    <p style="margin: 0;">PENTAHEX,<br></p>
+                    <p style="margin: 0;">FOREX COACH,<br></p>
                   </td>
                 </tr>
                 <!-- end copy -->

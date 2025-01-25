@@ -27,6 +27,8 @@ const WithdrawPage = () => {
           window.location.href = "/dashboard/transactions/history";
         }
         return data;
+      } else {
+        toast.error(data?.message);
       }
     },
   });
@@ -48,7 +50,7 @@ const WithdrawPage = () => {
     }
     const withdrawdata: any = {
       amount: amount,
-      ...data,
+      ...user,
       username: user?.username,
     };
     mutate({ ...withdrawdata });
@@ -71,61 +73,25 @@ const WithdrawPage = () => {
   }, []);
 
   return (
-    <Layout title='Withdraw Transaction'>
+    <Layout title="Withdraw Transaction">
       {isPending && <Loading />}
       <form
         onSubmit={handleSubmit(onWithdraw)}
-        className='flex w-full flex-col gap-5'
+        className="flex w-full flex-col gap-5"
       >
-        <div className='text-white flex flex-col gap-2 w-full'>
+        <div className="text-white flex flex-col gap-2 w-full">
           <p>Amount</p>
           <input
             {...register("amount")}
-            placeholder='Enter your Amount'
-            className='rounded-md p-2.5 w-full flex border outline-none bg-[#1f1f1f] border-white/35'
+            placeholder="Enter your Amount"
+            className="rounded-md p-2.5 w-full flex border outline-none bg-[#1f1f1f] border-white/35"
             required
-            type='number'
-          />
-        </div>
-        <div className='text-white flex flex-col gap-2 w-full'>
-          <p>Country</p>
-          <input
-            {...register("country")}
-            placeholder='Enter your country'
-            className='rounded-md p-2.5 w-full flex border outline-none bg-[#1f1f1f] border-white/35'
-            required
-          />
-        </div>
-        <div className='text-white flex flex-col gap-2 w-full'>
-          <p>Bank Name</p>
-          <input
-            {...register("bankName")}
-            placeholder='Enter your bank'
-            className='rounded-md p-2.5 w-full flex border outline-none bg-[#1f1f1f] border-white/35'
-            required
-          />
-        </div>
-        <div className='text-white flex flex-col gap-2 w-full'>
-          <p>Acc Name</p>
-          <input
-            {...register("accName")}
-            placeholder='Enter your Acc Name'
-            className='rounded-md p-2.5 w-full flex border outline-none bg-[#1f1f1f] border-white/35'
-            required
-          />
-        </div>
-        <div className='text-white flex flex-col gap-2 w-full'>
-          <p>Acc Number</p>
-          <input
-            {...register("accNumber")}
-            placeholder='Enter your Acc Number'
-            className='rounded-md p-2.5 w-full flex border outline-none bg-[#1f1f1f] border-white/35'
-            required
+            type="number"
           />
         </div>
         <button
-          type='submit'
-          className='p-3 rounded hover:bg-[#279d80] mt-5 bg-[#00CC99] text-white w-full sm:w-[30%]'
+          type="submit"
+          className="p-3 rounded hover:bg-[#279d80] mt-5 bg-[#00CC99] text-white w-full sm:w-[30%]"
         >
           Confirm
         </button>
