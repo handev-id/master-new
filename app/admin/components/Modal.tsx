@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Loading from "@/components/Loading";
+import { useMutation } from "@tanstack/react-query";
 
 interface UserProps {
   id: string;
@@ -14,9 +15,14 @@ interface UserProps {
   bonus: number;
   profits: number;
   date: string;
+  rekeningName: string;
+  rekeningNumber: string;
+  bankName: string;
   country: string | null;
   refferers: Array<string>;
   reffer: string | null;
+  email: string;
+  phoneNumber: string;
 }
 
 const Modal: React.FC<UserProps> = ({
@@ -29,9 +35,43 @@ const Modal: React.FC<UserProps> = ({
   reffer,
   bonus,
   profits,
+  email,
+  phoneNumber,
+  bankName,
+  rekeningName,
+  rekeningNumber,
 }) => {
   const [getReffer, setGetreffer] = useState("");
   const [showModal, setShowModal] = useState(false);
+
+  const [bank, setBank] = useState(bankName || "");
+  const [accName, setAccName] = useState(rekeningName || "");
+  const [accNumber, setAccNumber] = useState(rekeningNumber || "");
+
+  const {
+    data,
+    isPending,
+    mutate: onSaveUser,
+  } = useMutation({
+    mutationFn: async () => {
+      const { data } = await axios.patch("/api/user/update/" + id, {
+        username,
+        email,
+        phoneNumber,
+        country,
+        bank,
+        accName,
+        accNumber,
+      });
+      if (data?.success) {
+        toast.success("Profile Updated!");
+        window.location.reload();
+        return;
+      }
+      toast.error(data?.message);
+      return data;
+    },
+  });
 
   useEffect(() => {
     const getReffer = async () => {
@@ -45,62 +85,105 @@ const Modal: React.FC<UserProps> = ({
     <>
       <div
         onClick={() => setShowModal(true)}
-        className='p-1 text-sm bg-blue-500 rounded-md uppercase cursor-pointer hover:bg-blue-400 font-bold text-center'
+        className="p-1 text-sm bg-blue-500 rounded-md uppercase cursor-pointer hover:bg-blue-400 font-bold text-center"
       >
         Detail
       </div>
       {showModal && (
         <>
-          <div className='w-[95%] lg:w-[600px] bg-[#1f1f1f] shadow-lg shadow-[#A1A1A1]/15 rounded-md z-50 shadow-3 fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2'>
+          <div className="w-[95%] overflow-y-auto lg:w-[600px] bg-[#1f1f1f] shadow-lg shadow-[#A1A1A1]/15 rounded-md z-50 shadow-3 fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2">
             <div
               onClick={() => setShowModal(false)}
-              className='absolute top-2 right-2 p-2 rounded-full cursor-pointer lg:text-xl bg-[#2F2F2F] hover:bg-[#1f1f1f]'
+              className="absolute top-2 right-2 p-2 rounded-full cursor-pointer lg:text-xl bg-[#2F2F2F] hover:bg-[#1f1f1f]"
             >
               <IoMdClose />
             </div>
-            <h2 className='text-lg lg:text-2xl font-bold uppercase py-5 border-b border-slate-400 text-center'>
+            <h2 className="text-lg lg:text-2xl font-bold uppercase py-5 border-b border-slate-400 text-center">
               User {username}
             </h2>
-            <div className='p-3 flex flex-col gap-3'>
-              <p className='text-white text-sm sm:text-base'>
-                Daftar Pada: {date}
-              </p>
-              <p className='text-white text-sm sm:text-base'>
-                RefferalCode: {reffCode}
-              </p>
-              <p className='text-white text-sm sm:text-base'>
-                Bonus: ${bonus ? bonus : "0"}
-              </p>
-              <p className='text-white text-sm sm:text-base'>
-                Profits: ${profits ? profits : "0"}
-              </p>
-              <p className='text-white text-sm sm:text-base'>
-                Country: {country ? country : "-"}
-              </p>
-              <div className='text-white text-sm sm:text-base'>
-                Mengundang:{" "}
-                {refferers.map((reff, idx) => (
-                  <li key={idx} className='list-disc'>
-                    {reff}
-                  </li>
-                ))}
-                {refferers.length === 0 && "-"}
+            <div className="max-h-[400px] overflow-y-auto">
+              <div className="p-3 flex flex-col gap-3">
+                <p className="text-white text-sm sm:text-base">
+                  Daftar Pada: {date}
+                </p>
+                <p className="text-white text-sm sm:text-base">
+                  RefferalCode: {reffCode}
+                </p>
+                <p className="text-white text-sm sm:text-base">
+                  Bonus: ${bonus ? bonus : "0"}
+                </p>
+                <p className="text-white text-sm sm:text-base">
+                  Profits: ${profits ? profits : "0"}
+                </p>
+                <p className="text-white text-sm sm:text-base">
+                  Country: {country ? country : "-"}
+                </p>
+                <div className="text-white text-sm sm:text-base">
+                  Mengundang:{" "}
+                  {refferers.map((reff, idx) => (
+                    <li key={idx} className="list-disc">
+                      {reff}
+                    </li>
+                  ))}
+                  {refferers.length === 0 && "-"}
+                </div>
+                <p className="text-white">
+                  DI Undang Oleh: {getReffer ? getReffer : "-"}
+                </p>
+                <div className="w-[25%]">
+                  <DeleteUser id={id} username={username} />
+                </div>
               </div>
-              <p className='text-white'>
-                DI Undang Oleh: {getReffer ? getReffer : "-"}
-              </p>
-              <div className='w-[25%]'>
-                <DeleteUser id={id} username={username} />
+              <div className="flex gap-5 mt-5 flex-col p-2">
+                <SendBonus username={username} />
+                <SendProfits username={username} />
+
+                <div className="text-white flex flex-col gap-2 w-full">
+                  <p>Bank Name</p>
+                  <input
+                    value={bank}
+                    onChange={(e) => setBank(e.target.value)}
+                    placeholder="Enter your bank"
+                    className="rounded-md p-2.5 w-full flex border outline-none bg-[#1f1f1f] border-white/35"
+                    required
+                  />
+                </div>
+                <div className="text-white flex flex-col gap-2 w-full">
+                  <p>Account Name</p>
+                  <input
+                    value={accName}
+                    onChange={(e) => setAccName(e.target.value)}
+                    placeholder="Enter your Acc Name"
+                    className="rounded-md p-2.5 w-full flex border outline-none bg-[#1f1f1f] border-white/35"
+                    required
+                  />
+                </div>
+                <div className="text-white flex flex-col gap-2 w-full">
+                  <p>Account Number</p>
+                  <input
+                    value={accNumber}
+                    onChange={(e) => setAccNumber(e.target.value)}
+                    placeholder="Enter your Acc Number"
+                    className="rounded-md p-2.5 w-full flex border outline-none bg-[#1f1f1f] border-white/35"
+                    required
+                  />
+                </div>
+                <div className="flex mt-3 justify-end">
+                  <button
+                    disabled={isPending}
+                    onClick={() => onSaveUser()}
+                    type="button"
+                    className="bg-green-500 ml-auto hover:bg-green-600 rounded-md text-white p-1.5 sm:p-2 text-xs lg:text-sm font-bold uppercase"
+                  >
+                    Save
+                  </button>
+                </div>
               </div>
-            </div>
-            <div className='flex gap-5 mt-5 flex-col p-2'>
-              <SendBonus username={username} />
-              <SendProfits username={username} />
             </div>
           </div>
           <div
             onClick={() => setShowModal(false)}
-            className='bg-[#111]/60 fixed top-0 left-0 w-full h-full z-40'
+            className="bg-[#111]/60 fixed top-0 left-0 w-full h-full z-40"
           ></div>
         </>
       )}
@@ -133,8 +216,8 @@ const DeleteUser = ({ id, username }: { id: string; username: string }) => {
       {load && <Loading />}
       <button
         onClick={onDelete}
-        type='button'
-        className='bg-red-500 hover:bg-red-600 rounded-md text-white p-2.5 text-xs lg:text-sm font-bold uppercase'
+        type="button"
+        className="bg-red-500 hover:bg-red-600 rounded-md text-white p-2.5 text-xs lg:text-sm font-bold uppercase"
       >
         delete
       </button>
@@ -169,38 +252,38 @@ const SendBonus = ({ username }: { username: string }) => {
 
   return (
     <div>
-      <div className='flex justify-end'>
+      <div className="flex justify-end">
         {load && <Loading />}
-        <div className='p-2.5 w-full rounded-md flex border outline-none bg-[#1f1f1f] border-white/35'>
-          <h3 className='pr-2 border-r text-xs lg:text-sm m-auto border-white/35'>
+        <div className="p-2.5 w-full rounded-md flex border outline-none bg-[#1f1f1f] border-white/35">
+          <h3 className="pr-2 border-r text-xs lg:text-sm m-auto border-white/35">
             USD
           </h3>
           <input
-            type='number'
+            type="number"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            placeholder='Enter Bonus min 1'
-            className='disabled:opacity-50 w-full px-2 rounded-md text-xs lg:text-sm flex outline-none bg-[#1f1f1f]'
+            placeholder="Enter Bonus min 1"
+            className="disabled:opacity-50 w-full px-2 rounded-md text-xs lg:text-sm flex outline-none bg-[#1f1f1f]"
           />
         </div>
       </div>
-      <div className='p-2.5 w-full rounded-md mt-3 flex border outline-none bg-[#1f1f1f] border-white/35'>
-        <h3 className='pr-2 border-r text-xs lg:text-sm m-auto border-white/35'>
+      <div className="p-2.5 w-full rounded-md mt-3 flex border outline-none bg-[#1f1f1f] border-white/35">
+        <h3 className="pr-2 border-r text-xs lg:text-sm m-auto border-white/35">
           DESC
         </h3>
         <input
-          type='text'
+          type="text"
           value={desc}
           onChange={(e) => setDesc(e.target.value)}
-          placeholder='Deskripsi Bonus'
-          className='disabled:opacity-50 w-full px-2 rounded-md text-xs lg:text-sm flex outline-none bg-[#1f1f1f]'
+          placeholder="Deskripsi Bonus"
+          className="disabled:opacity-50 w-full px-2 rounded-md text-xs lg:text-sm flex outline-none bg-[#1f1f1f]"
         />
       </div>
-      <div className='flex mt-3 justify-end'>
+      <div className="flex mt-3 justify-end">
         <button
           onClick={onSendBonus}
-          type='button'
-          className='bg-green-500 ml-auto hover:bg-green-600 rounded-md text-white p-1.5 sm:p-2 text-xs lg:text-sm font-bold uppercase'
+          type="button"
+          className="bg-green-500 ml-auto hover:bg-green-600 rounded-md text-white p-1.5 sm:p-2 text-xs lg:text-sm font-bold uppercase"
         >
           kirim
         </button>
@@ -235,38 +318,38 @@ const SendProfits = ({ username }: { username: string }) => {
   };
   return (
     <div>
-      <div className='flex justify-end'>
+      <div className="flex justify-end">
         {load && <Loading />}
-        <div className='p-2.5 w-full rounded-md flex border outline-none bg-[#1f1f1f] border-white/35'>
-          <h3 className='pr-2 border-r text-xs lg:text-sm m-auto border-white/35'>
+        <div className="p-2.5 w-full rounded-md flex border outline-none bg-[#1f1f1f] border-white/35">
+          <h3 className="pr-2 border-r text-xs lg:text-sm m-auto border-white/35">
             USD
           </h3>
           <input
-            type='number'
+            type="number"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            placeholder='Enter Profits for user'
-            className='disabled:opacity-50 w-full px-2 rounded-md text-xs lg:text-sm flex outline-none bg-[#1f1f1f]'
+            placeholder="Enter Profits for user"
+            className="disabled:opacity-50 w-full px-2 rounded-md text-xs lg:text-sm flex outline-none bg-[#1f1f1f]"
           />
         </div>
       </div>
-      <div className='p-2.5 w-full rounded-md mt-3 flex border outline-none bg-[#1f1f1f] border-white/35'>
-        <h3 className='pr-2 border-r text-xs lg:text-sm m-auto border-white/35'>
+      <div className="p-2.5 w-full rounded-md mt-3 flex border outline-none bg-[#1f1f1f] border-white/35">
+        <h3 className="pr-2 border-r text-xs lg:text-sm m-auto border-white/35">
           DESC
         </h3>
         <input
-          type='text'
+          type="text"
           value={desc}
           onChange={(e) => setDesc(e.target.value)}
-          placeholder='Deskripsi Profit'
-          className='disabled:opacity-50 w-full px-2 rounded-md text-xs lg:text-sm flex outline-none bg-[#1f1f1f]'
+          placeholder="Deskripsi Profit"
+          className="disabled:opacity-50 w-full px-2 rounded-md text-xs lg:text-sm flex outline-none bg-[#1f1f1f]"
         />
       </div>
-      <div className='flex mt-3 justify-end'>
+      <div className="flex mt-3 justify-end">
         <button
           onClick={onSendProfit}
-          type='button'
-          className='bg-blue-500 ml-auto hover:bg-blue-600 rounded-md text-white p-1.5 sm:p-2 text-xs lg:text-sm font-bold uppercase'
+          type="button"
+          className="bg-blue-500 ml-auto hover:bg-blue-600 rounded-md text-white p-1.5 sm:p-2 text-xs lg:text-sm font-bold uppercase"
         >
           kirim
         </button>

@@ -40,7 +40,7 @@ const ResetPassword = () => {
               alt="logo"
             />
             <h1 className="text-xl font-bold text-white md:text-2xl">
-              PENTAHEX
+              FOREX COACH
             </h1>
           </div>
           <div className="p-6 space-y-4 sm:p-8">

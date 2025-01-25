@@ -14,19 +14,22 @@ datasource db {
 }
 
 model Users {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  reffCode    String   @unique
-  username    String   @unique
-  email       String   @unique
-  phoneNumber String   @unique
-  password    String
-  balance     Int      @default(0)
-  bonus       Int?     @default(0)
-  profits     Int?     @default(0)
-  country     String?
-  referrers   String[] @default([])
-  referrer    String?
-  createdAt   DateTime @default(now())
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  reffCode        String   @unique
+  username        String   @unique
+  email           String   @unique
+  phoneNumber     String   @unique
+  password        String
+  balance         Int      @default(0)
+  bonus           Int?     @default(0)
+  profits         Int?     @default(0)
+  country         String?
+  bankName        String?
+  rekeningName    String?
+  rekeningNumber  String?
+  referrers       String[] @default([])
+  referrer        String?
+  createdAt       DateTime @default(now())
 }
 
 model Refferal {
@@ -53,11 +56,10 @@ model Withdraw {
   id             String   @id @default(auto()) @map("_id") @db.ObjectId
   username       String
   amount         Int
-  country        String
-  bankName       String
-  rekeningName   String
-  rekeningNumber String
   status         Boolean? @default(false)
+  bankName       String?
+  rekeningName   String?
+  rekeningNumber String?
   title          String   @default("Withdraw")
   createdAt      DateTime @default(now())
 }
@@ -100,6 +102,7 @@ model Kyc {
   cardImage String
   faceImage String
   address   String
+  video     String?
   verified  Boolean  @default(false)
   createdAt DateTime @default(now())
 }

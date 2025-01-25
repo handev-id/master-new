@@ -4,13 +4,23 @@ import { NextResponse } from "next/server";
 export async function PATCH(request: Request) {
   try {
     const id = request.url.split("/").pop();
-    const { username, country, phoneNumber, email } = await request.json();
+    const { username, country, phoneNumber, email, accName, accNumber, bank } =
+      await request.json();
 
-    if (!id || !username || !country || !phoneNumber || !email) {
+    if (
+      !id ||
+      !username ||
+      !country ||
+      !phoneNumber ||
+      !email ||
+      !accName ||
+      !accNumber ||
+      !bank
+    ) {
       return NextResponse.json({ message: "Data is required" });
     }
 
-    const user = await prisma.users.update({
+    await prisma.users.update({
       where: {
         id: id,
       },
@@ -19,6 +29,9 @@ export async function PATCH(request: Request) {
         country,
         phoneNumber,
         email,
+        rekeningName: accName,
+        rekeningNumber: accNumber,
+        bankName: bank,
       },
     });
 

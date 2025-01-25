@@ -9,6 +9,9 @@ interface User {
   balance: number;
   password: string;
   country: string;
+  bankName: string;
+  rekeningName: string;
+  rekeningNumber: string;
   reffCode: string;
   avatar?: string;
 }
@@ -19,6 +22,24 @@ interface UploadType {
   imgUrl: null | string;
   setImgUrl: (url: string | undefined) => void;
 }
+
+interface UploadVideoType {
+  isUploaded: boolean;
+  setIsUploaded: (value: boolean) => void;
+  videoUrl: null | string;
+  setVideoUrl: (url: string | undefined) => void;
+}
+
+export const useUploadVideo = create<UploadVideoType>((set) => ({
+  isUploaded: false,
+  videoUrl: null,
+  setIsUploaded(value) {
+    set(() => ({ isUploaded: value }));
+  },
+  setVideoUrl(url) {
+    set(() => ({ videoUrl: url }));
+  },
+}));
 
 export const useUpload = create<UploadType>((set) => ({
   isUpload: false,

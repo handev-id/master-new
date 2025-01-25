@@ -47,13 +47,13 @@ const UploadForm = ({ isPending }: { isPending: boolean }) => {
   }, [file]);
 
   return (
-    <div className='text-white'>
+    <div className="text-white">
       {IsLoading && <Loading />}
       <div>
         <input
-          type='file'
+          type="file"
           onChange={handleFileChange}
-          className='border rounded-xl border-slate-500'
+          className="border rounded-xl border-slate-500"
         />
       </div>
       {IsLoading && "Loading..."}

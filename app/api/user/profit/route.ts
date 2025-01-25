@@ -33,7 +33,7 @@ export async function POST(req: Request) {
     await prisma.notifications.create({
       data: {
         username,
-        sender: "PENTAHEX",
+        sender: "FOREX COACH",
         desc: `Profit Added: ${amount} To Your Account!`,
       },
     });

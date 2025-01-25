@@ -4,8 +4,8 @@ import RegisterForm from "../../components/RegisterForm";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Register - PENTAHEX",
-  description: "Register to PENTAHEX",
+  title: "Register - FOREX COACH",
+  description: "Register to FOREX COACH",
 };
 
 const RegisterPage = () => {
